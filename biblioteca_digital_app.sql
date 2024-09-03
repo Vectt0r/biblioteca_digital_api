@@ -1,4 +1,4 @@
--- Criação da tabela `books Criar o bando de dados com o nome biblioteca_digital_sql`
+-- Criação da tabela `books Criar o banco de dados com o nome biblioteca_digital_sql`
 CREATE TABLE IF NOT EXISTS books (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome_livro VARCHAR(255) NOT NULL,
