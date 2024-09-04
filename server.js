@@ -20,11 +20,25 @@ connection.connect((err) => {
   console.log('Conectado ao MySQL');
 });
 
+const allowedOrigins = [
+  'http://localhost:8100', //dominio do Ionic Serve
+  'http://10.0.2.2:8100', //iP do emulador Android para Ionic
+  'http://127.0.0.1:8100', //local
+  'http://10.0.2.2:8080'
+];
+
 app.use(cors({
-  origin: 'http://localhost:8100', // Permite apenas este domínio
-  methods: 'GET,POST,PUT,DELETE',  // Métodos permitidos
-  allowedHeaders: 'Content-Type,Authorization' // Cabeçalhos permitidos
+  origin: function(origin, callback){
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: 'GET,POST,PUT,DELETE',
+  allowedHeaders: 'Content-Type,Authorization'
 }));
+
 
 const apiRouter = express.Router();
 
