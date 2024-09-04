@@ -9,7 +9,7 @@ const connection = mysql.createConnection({
     host: '127.0.0.1',
     user: 'root',
     password: '',
-    database: 'biblioteca_digital_app',
+    database: 'biblioteca_digital_sql',
 });
 
 connection.connect((err) => {
