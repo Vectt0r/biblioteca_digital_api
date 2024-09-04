@@ -1,6 +1,6 @@
 const express = require('express');
 const mysql = require('mysql2');
-
+const cors = require('cors');
 const app = express();
 app.use(express.json());
 
@@ -20,6 +20,12 @@ connection.connect((err) => {
   console.log('Conectado ao MySQL');
 });
 
+app.use(cors({
+  origin: 'http://localhost:8100', // Permite apenas este domínio
+  methods: 'GET,POST,PUT,DELETE',  // Métodos permitidos
+  allowedHeaders: 'Content-Type,Authorization' // Cabeçalhos permitidos
+}));
+
 const apiRouter = express.Router();
 
 apiRouter.get('/books/ExibirBiblioteca', (req, res) => {
@@ -28,6 +34,7 @@ apiRouter.get('/books/ExibirBiblioteca', (req, res) => {
       res.status(500).json({ error: err.message });
       return;
     }
+    console.log('Livros exibidos:', results);
     res.json(results);
   });
 });
@@ -43,6 +50,7 @@ apiRouter.get('/books/:id', (req, res) => {
       res.status(404).json({ message: 'Livro não encontrado' });
       return;
     }
+    console.log('Livro encontrado:', results[0]);
     res.json(results[0]);
   });
 });
@@ -57,7 +65,9 @@ apiRouter.post('/books/AdicionarLivro', (req, res) => {
         res.status(500).json({ error: err.message });
         return;
       }
-      res.status(201).json({ id: results.insertId, nome_livro, nome_autor, genero, editora, numero_paginas });
+      const newBook = { id: results.insertId, nome_livro, nome_autor, genero, editora, numero_paginas };
+      console.log('Livro adicionado:', newBook);
+      res.status(201).json(newBook);
     }
   );
 });
@@ -73,6 +83,7 @@ apiRouter.put('/books/:id', (req, res) => {
         res.status(500).json({ error: err.message });
         return;
       }
+      console.log(`Livro com ID ${id} atualizado com sucesso`);
       res.json({ message: 'Livro atualizado com sucesso' });
     }
   );
@@ -85,6 +96,7 @@ apiRouter.delete('/books/:id', (req, res) => {
       res.status(500).json({ error: err.message });
       return;
     }
+    console.log(`Livro com ID ${id} deletado com sucesso`);
     res.json({ message: 'Livro deletado com sucesso' });
   });
 });
